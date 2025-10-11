@@ -72,39 +72,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Preload critical wallet images */}
-        <link
-          rel="preload"
-          as="image"
-          href="https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9GPrbxS9KXK3BTF1nxHCoRl6hWycNGYJakEA0Q"
-          type="image/png"
-        />
-        <link
-          rel="preload"
-          as="image"
-          href="https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9GafWroELV3F89Q0xGUw4D1JWB5YzTmOvdheia"
-          type="image/png"
-        />
-        <link
-          rel="preload"
-          as="image"
-          href="https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9GNZiY8wayGb4jMhkdzqDCP689onYlpUuBfXWg"
-          type="image/png"
-        />
-        <link
-          rel="preload"
-          as="image"
-          href="https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9GcboJze7Nv1i2QbJ8fqXplWenraVuEgFBjm4P"
-          type="image/png"
-        />
-        <link
-          rel="preload"
-          as="image"
-          href="https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9Gz4TH8BMgXUIhMn4wK2OYk5EiZC9q7oRA6smG"
-          type="image/png"
-        />
-      </head>
       <body 
         className={`${dmSans.className} antialiased`}
       >
