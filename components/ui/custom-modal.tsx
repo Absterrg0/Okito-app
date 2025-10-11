@@ -31,19 +31,46 @@ export default function CustomWalletModal({ isOpen, onClose }: { isOpen: boolean
     const popularWallets = [
         {
             name: 'Phantom',
-            icon: <Image src={theme === 'dark' ? "/phantom-dark.png" : "/phantom.png"} alt="Phantom" width={32} height={32} />,
+            icon: <Image 
+                src={theme === 'dark' ? "https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9GafWroELV3F89Q0xGUw4D1JWB5YzTmOvdheia" : "https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9GPrbxS9KXK3BTF1nxHCoRl6hWycNGYJakEA0Q"} 
+                alt="Phantom" 
+                width={32} 
+                height={32}
+                priority
+                loading="eager"
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+            />,
             description: 'Most popular Solana wallet',
             installed: wallets.find(w => w.adapter.name === 'Phantom')?.readyState === 'Installed'
         },
         {
             name: 'MetaMask',
-            icon: <Image src={theme === 'dark' ? "/metamask-dark.png" : "/metamask.png"} alt="MetaMask" width={24} height={24} />,
+            icon: <Image 
+                src={theme === 'dark' ? "https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9GcboJze7Nv1i2QbJ8fqXplWenraVuEgFBjm4P" : "https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9GNZiY8wayGb4jMhkdzqDCP689onYlpUuBfXWg"} 
+                alt="MetaMask" 
+                width={24} 
+                height={24}
+                priority
+                loading="eager"
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+            />,
             description: 'Popular multi-chain wallet',
             installed: wallets.find(w => w.adapter.name === 'MetaMask')?.readyState === 'Installed'
         },
         {
             name: 'Backpack',
-            icon: <Image src={theme === 'dark' ? "/backpack-dark.png" : "/backpack.png"} alt="Backpack" width={24} height={24} />,
+            icon: <Image 
+                src={theme === 'dark' ? "https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9GcboJze7Nv1i2QbJ8fqXplWenraVuEgFBjm4P" : "https://9sdck39xuk.ufs.sh/f/n6oPhDbx3I9Gz4TH8BMgXUIhMn4wK2OYk5EiZC9q7oRA6smG"} 
+                alt="Backpack" 
+                width={24} 
+                height={24}
+                priority
+                loading="eager"
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+            />,
             description: 'Modern Solana wallet',
             installed: wallets.find(w => w.adapter.name === 'Backpack')?.readyState === 'Installed'
         }
