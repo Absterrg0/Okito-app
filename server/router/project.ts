@@ -80,6 +80,11 @@ input(fetchProjectDetailsSchema)
                 userId:ctx.session.user.id
             },
             include:{
+                user:{
+                    select:{
+                        walletAddress:true
+                    }
+                },
                 apiTokens:{
                     where:{
                         status:"ACTIVE"

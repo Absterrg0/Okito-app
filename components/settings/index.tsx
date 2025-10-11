@@ -8,8 +8,8 @@ import ApiTokenCreation from "./api-token-component"
 import WebhookCreation from "./webhook-component"
 import { useSelectedProjectStore } from "@/store/projectStore"
 import { useProjectFetchDetails } from "@/hooks/projects/useProjectDetailsFetch"
-import Loader from "@/components/ui/loader"
 import { ModeToggle } from "@/components/ui/theme-toggle"
+import { SettingsSkeleton } from "./settings-skeleton"
 import { ApiTokenDialog } from "./api-token-dialog"
 import ProjectSetup from "./project-setup"
 import NotificationAndPreferences from "./notifications-and-preferences"
@@ -22,11 +22,7 @@ export default function UserSettings() {
   const [showTokenDialog, setShowTokenDialog] = useState(false)
   
   if (isLoading || !project) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader />
-      </div>
-    )
+    return <SettingsSkeleton />
   }
 
  

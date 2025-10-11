@@ -37,8 +37,10 @@ export const fetchProjectDetailsSchema = projectSchema.pick({
 })
 
 export const fetchProjectDetailsSchemaResponse = projectSchema.omit({
-    user:true,
 }).extend({
+    user:z.object({
+        walletAddress:z.string().nullable()
+    }),
     apiTokens: z.array(apiTokenSchema.omit({ projectId: true })).optional().default([]),
     webhookEndpoints: z.array(webhookSchema.omit({ secret: true })).optional().default([]),
     notificationEmails: z.array(z.string()).optional().default([]),

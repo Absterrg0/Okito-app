@@ -29,7 +29,6 @@ import ProjectSelector from './project-selector'
 import { User } from "better-auth";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { startTransition } from "react";
 import { unstable_ViewTransition as ViewTransition } from 'react'
 import { GradientBg } from '@/components/ui/gradient-bg'
 
@@ -98,9 +97,7 @@ export function AppSidebar({user}:{user:User}) {
     e.preventDefault();
     
     // Use React's startTransition which works with ViewTransition wrapper
-    startTransition(() => {
       router.push(url);
-    });
   };
 
   return (

@@ -11,41 +11,41 @@ type Params = {
 }
 
 export function useVerifyWallet({ publicKey, connected, signMessage, onSuccess, onError }: Params) {
-  const getNonce = trpc.user.getWalletNonce.useMutation()
-  const confirmWallet = trpc.user.confirmWallet.useMutation({
+  const utils = trpc.useUtils()
+
+  const verifyWallet = trpc.user.confirmWallet.useMutation({
     onSuccess,
     onError,
   })
 
-  return {
-    mutate: async () => {
-      if (!connected || !publicKey) {
-        throw new Error('Please connect your wallet first')
-      }
-      if (!signMessage) {
-        throw new Error('Your wallet does not support message signing. Please use a compatible wallet.')
-      }
+  const getNonce = trpc.user.getWalletNonce.useMutation()
 
-      // Step 1: Request nonce
+  const mutate = async () => {
+    if (!connected || !publicKey) throw new Error('Please connect your wallet first')
+    if (!signMessage) throw new Error('Your wallet does not support message signing.')
+
+    try {
+      // Step 1: Get nonce (direct call, not tracked as a separate mutation)
       const { message, timestamp } = await getNonce.mutateAsync({ publicKey })
 
-      // Step 2: Sign the message
-      let signature: Uint8Array
-      try {
-        signature = await signMessage(new TextEncoder().encode(message))
-      } catch {
-        throw new Error('Message signing was cancelled or failed')
-      }
+      // Step 2: Sign message
+      const signature = await signMessage(new TextEncoder().encode(message))
 
-      // Step 3: Confirm wallet with signature (base58 encoded)
-      await confirmWallet.mutateAsync({
+      // Step 3: Confirm wallet
+      await verifyWallet.mutateAsync({
         publicKey,
-        signature: Array.from(signature), // server expects string
+        signature: Array.from(signature),
         timestamp,
       })
-    },
-    isLoading: getNonce.isPending || confirmWallet.isPending,
-    error: getNonce.error || confirmWallet.error,
-    isSuccess: confirmWallet.isSuccess,
+    } catch (err) {
+      onError?.(err)
+    }
+  }
+
+  return {
+    mutate,
+    isLoading: getNonce.isPending || verifyWallet.isPending,
+    error: getNonce.error || verifyWallet.error,
+    isSuccess: verifyWallet.isSuccess,
   }
 }

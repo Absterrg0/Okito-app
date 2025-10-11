@@ -2,7 +2,6 @@
 
 import { useSelectedProjectStore } from '@/store/projectStore'
 import { ModeToggle } from '@/components/ui/theme-toggle'
-import { useSessionContext } from '@/components/providers/session-provider'
 import { useProjectFetchDetails } from '@/hooks/projects/useProjectDetailsFetch'
 import { ProjectStatsGrid } from './project-stats-grid'
 import { IntegrationStatusSection } from './integration-status-section'
@@ -12,7 +11,6 @@ import { OverviewSkeleton } from './overview-skeleton'
 export default function OverviewPage() {
   const selectedProject = useSelectedProjectStore(s => s.selectedProject);
   const { data: project, isLoading } = useProjectFetchDetails(selectedProject?.id || '');
-  const { session } = useSessionContext();
 
   // Show skeleton when no project is selected or when loading
   if (!selectedProject || isLoading) {
@@ -39,7 +37,7 @@ export default function OverviewPage() {
 
       <div className="space-y-12">
         {/* Stats Grid */}
-        {project && <ProjectStatsGrid project={project} walletAddress={session?.user?.walletAddress || undefined} />}
+        {project && <ProjectStatsGrid project={project} walletAddress={project?.user?.walletAddress || undefined} />}
 
         {/* Main Content Layout */}
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">

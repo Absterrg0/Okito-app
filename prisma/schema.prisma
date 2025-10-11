@@ -101,7 +101,6 @@ model Project {
   webhookEndpoints WebhookEndpoint[]
   
   @@map("project")
-  @@unique([name])
 }
 
 
