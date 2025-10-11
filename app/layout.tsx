@@ -1,0 +1,55 @@
+import type { Metadata } from "next";
+import { DM_Sans } from "next/font/google";
+import "./globals.css";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import QueryProvider from "@/components/providers/query-provider";
+import Wallet from "@/components/ui/wallet";
+import {NextSSRPlugin} from '@uploadthing/react/next-ssr-plugin'
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
+
+
+import { Toaster } from "@/components/ui/sonner";
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+});
+
+
+
+export const metadata: Metadata = {
+  title: "Okito",
+  description: "Integrate and manage web3 solana payments in one-go ",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body 
+        className={`${dmSans.className} antialiased`}
+      >
+      <PostHogProvider>
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)}/>
+          <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+          >
+            <QueryProvider>
+              <Wallet>
+                {children}
+              </Wallet>
+            </QueryProvider>
+          </ThemeProvider>
+          <Toaster />
+      </PostHogProvider>
+      </body>
+    </html>
+  );
+}
