@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { HugeiconsIcon } from '@hugeicons/react'
 import {  Add01Icon, Cancel01Icon } from '@hugeicons/core-free-icons'
 import { Button } from "@/components/ui/button"
@@ -31,13 +31,13 @@ export default function ProjectSelector() {
   const setSelectedProject = useSelectedProjectStore(s=>s.setSelectedProject);
 
   // Auto-select first project if none selected or current selection is invalid
-  const currentProject = (() => {
-    if (!projects || projects.length === 0) return null;
+  useEffect(() => {
+    if (!projects || projects.length === 0) return;
     
     if (!selectedProject) {
       // No project selected, auto-select first one
       setSelectedProject(projects[0]);
-      return projects[0];
+      return;
     }
     
     // Check if current selection still exists
@@ -45,11 +45,11 @@ export default function ProjectSelector() {
     if (!projectExists) {
       // Current selection no longer exists, auto-select first one
       setSelectedProject(projects[0]);
-      return projects[0];
+      return;
     }
-    
-    return selectedProject;
-  })(); 
+  }, [projects, selectedProject, setSelectedProject]);
+
+  const currentProject = selectedProject; 
 
   const handleProjectSelect = (project:Project) => {
     setSelectedProject(project)
@@ -74,7 +74,7 @@ export default function ProjectSelector() {
 
   const closeCreatePopover = () => {
     setIsCreateOpen(false)
-  
+
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
