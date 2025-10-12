@@ -35,8 +35,9 @@ export function formatDate(date: string | Date) {
         return 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
       case 'FAILED':
         return 'bg-red-500/10 text-red-500 border border-red-500/20'
-      case 'PENDING':
       case 'TIMED_OUT':
+        return 'bg-zinc-500/10 text-zinc-500 border border-zinc-500/20'
+      case 'PENDING':
       default:
         return 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
     }

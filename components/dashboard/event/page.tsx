@@ -140,17 +140,17 @@ export default function EventsPage() {
       </div>
 
       {/* Table */}
-      <div className="crypto-base rounded-lg">
-            <Table className='crypto-glass-static'>
+      <div className="crypto-glass-static rounded-lg">
+            <Table className=''>
               <TableHeader>
-                <TableRow className="crypto-glass-static border-b border-zinc-100/5">
-                  <TableHead className="font-semibold text-foreground crypto-input text-center">#</TableHead>
-                  <TableHead className="font-semibold text-foreground crypto-input text-center">Status</TableHead>
-                  <TableHead className="font-semibold text-foreground crypto-input text-center">Amount</TableHead>
-                  <TableHead className="font-semibold text-foreground crypto-input text-center">Currency</TableHead>
-                  <TableHead className="font-semibold text-foreground crypto-input text-center">Type</TableHead>
-                  <TableHead className="font-semibold text-foreground crypto-input text-center">Time</TableHead>
-                  <TableHead className="font-semibold text-foreground crypto-input text-center">Metadata</TableHead>
+                <TableRow className=" crypto-glass-static border-b border-border/10">
+                  <TableHead className="font-semibold text-foreground text-center">#</TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">Status</TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">Amount</TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">Currency</TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">Type</TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">Time</TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">Metadata</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -182,7 +182,6 @@ export default function EventsPage() {
                   paginated.map((e, idx) => (
                     <TableRow 
                       key={e.id} 
-                      className={`${idx < paginated.length - 1 ? 'crypto-base' : ''} cursor-pointer hover:bg-muted/50 transition-colors`}
                       onClick={() => {
                         if (openEventId === e.id) {
                           setEventIdParam()
@@ -199,7 +198,7 @@ export default function EventsPage() {
                       </TableCell>
                       <TableCell className="font-mono text-xs text-center">
                         {e.payment?.amount !== undefined && e.payment?.amount !== null
-                          ? formatAmount6Decimals(e.payment?.amount)
+                          ? `$${formatAmount6Decimals(e.payment?.amount)}`
                           : '—'}
                       </TableCell>
                       <TableCell className="text-xs text-center">

@@ -11,7 +11,7 @@ export default defineConfig({
     extensions:[
       prismaExtension({
         version:"6.16.2",
-        schema:"../../packages/db/prisma/schema.prisma"
+        schema:"./prisma/schema.prisma"
       })
     ]
   },
