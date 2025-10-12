@@ -85,13 +85,13 @@ export async function deliverWebhook(
       // Create the payload
       const payloadString = JSON.stringify(payload);
 
-      // Make the HTTP request with simple secret in header
+      // Make the HTTP request with Authorization header
       const response = await fetch(endpoint.url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'User-Agent': 'Okito-Webhook/1.0',
-          'X-Okito-Signature': decryptedSecret,
+          'Authorization': decryptedSecret,
           'X-Okito-Event-Id': eventId,
           'X-Okito-Event-Type': payload.type,
         },

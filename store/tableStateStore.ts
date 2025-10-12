@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-type SortField = 'environment' | 'createdAt' | 'lastUsedAt' | 'status' | 'requestCount' | 'url' | 'description'
+type SortField = 'environment' | 'createdAt' | 'lastUsedAt' | 'status' | 'requestCount' | 'url' | 'description' | 'amount' | 'currency' | 'type'
 type SortDirection = 'asc' | 'desc'
 
 interface TableState {
@@ -17,6 +17,8 @@ interface TableState {
   
   // Event table state
   eventCurrentPage: number
+  eventSortField: SortField
+  eventSortDirection: SortDirection
 }
 
 interface TableStateActions {
@@ -34,6 +36,9 @@ interface TableStateActions {
   
   // Event actions
   setEventCurrentPage: (page: number) => void
+  setEventSortField: (field: SortField) => void
+  setEventSortDirection: (direction: SortDirection) => void
+  handleEventSort: (field: SortField) => void
 }
 
 const initialState: TableState = {
@@ -49,6 +54,8 @@ const initialState: TableState = {
   
   // Event defaults
   eventCurrentPage: 1,
+  eventSortField: 'createdAt',
+  eventSortDirection: 'desc',
 }
 
 export const useTableStateStore = create<TableState & TableStateActions>()(
@@ -98,6 +105,23 @@ export const useTableStateStore = create<TableState & TableStateActions>()(
       
       // Event actions
       setEventCurrentPage: (page: number) => set({ eventCurrentPage: page }),
+      setEventSortField: (field: SortField) => set({ eventSortField: field }),
+      setEventSortDirection: (direction: SortDirection) => set({ eventSortDirection: direction }),
+      handleEventSort: (field: SortField) => {
+        const { eventSortField, eventSortDirection } = get()
+        if (eventSortField === field) {
+          set({ 
+            eventSortDirection: eventSortDirection === 'asc' ? 'desc' : 'asc',
+            eventCurrentPage: 1 // Reset to first page when sorting
+          })
+        } else {
+          set({ 
+            eventSortField: field, 
+            eventSortDirection: 'asc',
+            eventCurrentPage: 1 // Reset to first page when sorting
+          })
+        }
+      },
     }),
     {
       name: 'table-state-storage', // unique name for localStorage key
@@ -110,6 +134,8 @@ export const useTableStateStore = create<TableState & TableStateActions>()(
         webhookSortField: state.webhookSortField,
         webhookSortDirection: state.webhookSortDirection,
         eventCurrentPage: state.eventCurrentPage,
+        eventSortField: state.eventSortField,
+        eventSortDirection: state.eventSortDirection,
       }),
     }
   )

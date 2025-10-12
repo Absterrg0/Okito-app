@@ -6,10 +6,11 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { RefreshIcon, Search01Icon } from '@hugeicons/core-free-icons'
+import { RefreshIcon, Search01Icon, ArrowUp01Icon, ArrowDown01Icon } from '@hugeicons/core-free-icons'
 import { ModeToggle } from '@/components/ui/theme-toggle'
 import { toast } from 'sonner'
 import { useSelectedProjectStore } from '@/store/projectStore'
+import { useTableStateStore } from '@/store/tableStateStore'
 import { useFetchEvents } from '@/hooks/event/useGetEvents'
 import { 
   Pagination, 
@@ -49,10 +50,18 @@ const itemsPerPage = 50;
 export default function EventsPage() {
   const { selectedProject } = useSelectedProjectStore()
   const [query, setQuery] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  
+  // Use Zustand store for persistent state
+  const {
+    eventCurrentPage: currentPage,
+    eventSortField: sortField,
+    eventSortDirection: sortDirection,
+    setEventCurrentPage: setCurrentPage,
+    handleEventSort
+  } = useTableStateStore()
 
   const projectId = selectedProject?.id ?? ''
   const { data:events, isLoading, error, refetch, isFetching } = useFetchEvents(projectId)
@@ -60,19 +69,72 @@ export default function EventsPage() {
 
   const normalizedQuery = query.trim().toLowerCase()
   const baseEvents: EventItem[] = events ?? []
-  const filtered = normalizedQuery
-    ? baseEvents.filter((event) => {
-        const typeLabel = LABEL_BY_TYPE[event.type] ?? event.type
-        return `${event.id} ${event.sessionId} ${typeLabel}`.toLowerCase().includes(normalizedQuery)
-      })
-    : baseEvents
+  
+  // Sort and paginate events (react-compiler will optimize this)
+  const sortedAndPaginatedEvents = (() => {
+    if (!baseEvents) return { events: [], totalPages: 0 }
 
-  // Pagination
-  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage))
-  const safePage = Math.min(currentPage, totalPages)
-  const startIndex = (safePage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const paginated = filtered.slice(startIndex, endIndex)
+    // Filter events first
+    const filtered = normalizedQuery
+      ? baseEvents.filter((event) => {
+          const typeLabel = LABEL_BY_TYPE[event.type] ?? event.type
+          return `${event.id} ${event.sessionId} ${typeLabel}`.toLowerCase().includes(normalizedQuery)
+        })
+      : baseEvents
+
+    // Sort events
+    const sorted = [...filtered].sort((a, b) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let aValue: any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let bValue: any
+
+      // Handle different sort fields
+      if (sortField === 'createdAt') {
+        aValue = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        bValue = b.createdAt ? new Date(b.createdAt).getTime() : 0
+      } else if (sortField === 'status') {
+        aValue = a.payment?.status || ''
+        bValue = b.payment?.status || ''
+      } else if (sortField === 'amount') {
+        aValue = a.payment?.amount ? Number(a.payment.amount) : 0
+        bValue = b.payment?.amount ? Number(b.payment.amount) : 0
+      } else if (sortField === 'currency') {
+        aValue = a.payment?.currency || ''
+        bValue = b.payment?.currency || ''
+      } else if (sortField === 'type') {
+        aValue = LABEL_BY_TYPE[a.type] ?? a.type
+        bValue = LABEL_BY_TYPE[b.type] ?? b.type
+      } else {
+        aValue = a.id
+        bValue = b.id
+      }
+
+      // Handle string fields
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        aValue = aValue.toLowerCase()
+        bValue = bValue.toLowerCase()
+      }
+
+      // Ensure values are comparable
+      if (aValue == null && bValue == null) return 0
+      if (aValue == null) return 1
+      if (bValue == null) return -1
+
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
+      return 0
+    })
+
+    // Paginate
+    const totalPages = Math.max(1, Math.ceil(sorted.length / itemsPerPage))
+    const safePage = Math.min(currentPage, totalPages)
+    const startIndex = (safePage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const paginatedEvents = sorted.slice(startIndex, endIndex)
+
+    return { events: paginatedEvents, totalPages, startIndex }
+  })()
   
 
 
@@ -101,6 +163,22 @@ export default function EventsPage() {
     }
     router.replace(`${pathname}?${params.toString()}`, { scroll: false })
   }
+
+  const SortButton = ({ field, children }: { field: 'status' | 'amount' | 'currency' | 'type' | 'createdAt'; children: React.ReactNode }) => (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="h-auto p-0 font-semibold text-foreground hover:text-primary"
+      onClick={() => handleEventSort(field)}
+    >
+      <div className="flex items-center gap-1">
+        {children}
+        {sortField === field && (
+          sortDirection === 'asc' ? <HugeiconsIcon icon={ArrowUp01Icon} className="w-4 h-4" /> : <HugeiconsIcon icon={ArrowDown01Icon} className="w-4 h-4" />
+        )}
+      </div>
+    </Button>
+  )
 
   return (
     <div className="min-h-screen rounded-full bg-background p-8">
@@ -145,11 +223,21 @@ export default function EventsPage() {
               <TableHeader>
                 <TableRow className=" crypto-glass-static border-b border-border/10">
                   <TableHead className="font-semibold text-foreground text-center">#</TableHead>
-                  <TableHead className="font-semibold text-foreground text-center">Status</TableHead>
-                  <TableHead className="font-semibold text-foreground text-center">Amount</TableHead>
-                  <TableHead className="font-semibold text-foreground text-center">Currency</TableHead>
-                  <TableHead className="font-semibold text-foreground text-center">Type</TableHead>
-                  <TableHead className="font-semibold text-foreground text-center">Time</TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">
+                    <SortButton field="status">Status</SortButton>
+                  </TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">
+                    <SortButton field="amount">Amount</SortButton>
+                  </TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">
+                    <SortButton field="currency">Currency</SortButton>
+                  </TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">
+                    <SortButton field="type">Type</SortButton>
+                  </TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">
+                    <SortButton field="createdAt">Time</SortButton>
+                  </TableHead>
                   <TableHead className="font-semibold text-foreground text-center">Metadata</TableHead>
                 </TableRow>
               </TableHeader>
@@ -172,14 +260,14 @@ export default function EventsPage() {
                       Select a project to view its events.
                     </TableCell>
                   </TableRow>
-                ) : paginated.length === 0 ? (
+                ) : sortedAndPaginatedEvents.events.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-10 text-muted-foreground">
                       No events found.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  paginated.map((e, idx) => (
+                  sortedAndPaginatedEvents.events.map((e, idx) => (
                     <TableRow 
                       key={e.id} 
                       onClick={() => {
@@ -190,7 +278,7 @@ export default function EventsPage() {
                         }
                       }}
                     >
-                      <TableCell className="whitespace-nowrap text-center">{startIndex + idx + 1}</TableCell>
+                      <TableCell className="whitespace-nowrap text-center">{(sortedAndPaginatedEvents.startIndex || 0) + idx + 1}</TableCell>
                       <TableCell className="text-center">
                         <Badge variant="outline" className={`text-xs ${getStatusClass(e.payment?.status)}`}>
                           {e.payment && e.payment.status ? e.payment.status : '—'}
@@ -222,10 +310,10 @@ export default function EventsPage() {
           </div>
 
           {/* Pagination */}
-          {totalPages > 1 && (
+          {sortedAndPaginatedEvents.totalPages > 1 && (
             <div className="mt-4 flex items-center justify-between">
               <div className="text-sm text-muted-foreground">
-                Showing {startIndex + 1}–{Math.min(endIndex, filtered.length)} of {filtered.length}
+                Showing {(sortedAndPaginatedEvents.startIndex || 0) + 1}–{Math.min((sortedAndPaginatedEvents.startIndex || 0) + itemsPerPage, sortedAndPaginatedEvents.events.length + (sortedAndPaginatedEvents.startIndex || 0))} of {baseEvents.length}
               </div>
               <Pagination>
                 <PaginationContent>
@@ -234,13 +322,13 @@ export default function EventsPage() {
                       href="#"
                       onClick={(e) => {
                         e.preventDefault()
-                        if (safePage > 1) setCurrentPage(safePage - 1)
+                        if (currentPage > 1) setCurrentPage(currentPage - 1)
                       }}
-                      className={safePage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
                     />
                   </PaginationItem>
                   
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  {Array.from({ length: sortedAndPaginatedEvents.totalPages }, (_, i) => i + 1).map((page) => (
                     <PaginationItem key={page}>
                       <PaginationLink
                         href="#"
@@ -248,7 +336,7 @@ export default function EventsPage() {
                           e.preventDefault()
                           setCurrentPage(page)
                         }}
-                        isActive={safePage === page}
+                        isActive={currentPage === page}
                         className="cursor-pointer"
                       >
                         {page}
@@ -261,9 +349,9 @@ export default function EventsPage() {
                       href="#"
                       onClick={(e) => {
                         e.preventDefault()
-                        if (safePage < totalPages) setCurrentPage(safePage + 1)
+                        if (currentPage < sortedAndPaginatedEvents.totalPages) setCurrentPage(currentPage + 1)
                       }}
-                      className={safePage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      className={currentPage === sortedAndPaginatedEvents.totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
                     />
                   </PaginationItem>
                 </PaginationContent>

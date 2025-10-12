@@ -36,8 +36,6 @@ export async function POST(req: NextRequest) {
 
   const webhookData = await req.json();
 
-  console.log(webhookData);
-
   for (const transaction of webhookData) {
     try {
       if (transaction.transactionError) {
