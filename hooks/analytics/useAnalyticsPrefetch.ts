@@ -3,7 +3,7 @@
 import { trpc } from "@/lib/trpc";
 import type { GetAnalyticsInput } from "@/types/analytics";
 
-export function useAnalytics(projectId: string, period: GetAnalyticsInput["period"]) {
+export function useAnalyticsPrefetch(projectId: string, period: GetAnalyticsInput["period"] = '7d') {
   return trpc.analytics.getAnalytics.useQuery(
     { projectId, period },
     { 
@@ -17,5 +17,3 @@ export function useAnalytics(projectId: string, period: GetAnalyticsInput["perio
     }
   );
 }
-
-

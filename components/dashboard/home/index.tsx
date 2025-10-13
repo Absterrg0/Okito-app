@@ -104,7 +104,7 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Skeleton loading for initial load */}
+        {/* Optimized skeleton loading - only show for initial load */}
         <div className="space-y-12 mb-12">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div className="lg:col-span-3 crypto-glass border-0 rounded-2xl p-8">
