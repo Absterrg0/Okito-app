@@ -490,7 +490,7 @@ export default function HomePage() {
               <div
                 key={tx.id}
                 className="crypto-glass-static border-0 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:bg-white/5"
-                onClick={() => router.push('/events')}
+                onClick={() => router.push('/dashboard/events')}
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
