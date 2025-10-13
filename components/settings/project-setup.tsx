@@ -75,7 +75,7 @@ export default function ProjectSetup(props:ProjectSetupProps){
                     variant="outline"
                     size="lg"
                     className="crypto-button"
-                    onClick={() => router.push('/checkout')}
+                    onClick={() => window.open('/checkout', '_blank')}
                     title="View billing information"
                   >
                     <HugeiconsIcon icon={CreditCardIcon} className="w-4 h-4 mr-2" />

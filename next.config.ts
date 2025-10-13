@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: false,
   experimental: {
     viewTransition: true,
-    reactCompiler: true
+    reactCompiler: true,
   }
 };
 

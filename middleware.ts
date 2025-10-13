@@ -22,10 +22,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
   
-  // If user is authenticated and trying to access signin page, redirect to dashboard
-  if (session && pathname === '/signin') {
-    return NextResponse.redirect(new URL("/dashboard/overview", request.url));
-  }
   
   // If user is authenticated and trying to access root, redirect to dashboard
   if (session && pathname === '/') {

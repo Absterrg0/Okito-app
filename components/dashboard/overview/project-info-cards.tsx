@@ -101,7 +101,7 @@ export function ProjectInfoCards({ project }: ProjectInfoCardsProps) {
         
         <div className="space-y-3">
           <Button asChild variant="outline" className="w-full justify-between crypto-button">
-            <a href="https://docs.okito.dev" target="_blank" rel="noreferrer">
+            <a href="https://docs.okito.dev/core" target="_blank" rel="noreferrer">
               <div className="flex items-center gap-2">
                 <HugeiconsIcon icon={BookOpen01Icon} className="w-4 h-4" />
                 <span>Documentation</span>
