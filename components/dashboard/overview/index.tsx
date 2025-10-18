@@ -10,6 +10,7 @@ import { OverviewSkeleton } from './overview-skeleton'
 import { redirect } from 'next/navigation'
 
 export default function OverviewPage() {
+
   const selectedProject = useSelectedProjectStore(s => s.selectedProject);
   const { data: project, isLoading } = useProjectFetchDetails(selectedProject?.id || '');
 
