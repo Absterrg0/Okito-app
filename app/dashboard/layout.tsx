@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { SessionProvider } from "@/components/providers/session-provider";
 import type { User } from "better-auth";
+import { redirect } from "next/navigation";
 export default async function HomeLayout({
   children,
 }: Readonly<{
@@ -17,6 +18,9 @@ export default async function HomeLayout({
   })
 const user = session?.user
 
+if(!session?.user.walletAddress){
+  redirect('/verify')
+}
 
   return (
     <SessionProvider session={session}>
