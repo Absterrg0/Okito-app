@@ -7,6 +7,7 @@ import { ProjectStatsGrid } from './project-stats-grid'
 import { IntegrationStatusSection } from './integration-status-section'
 import { ProjectInfoCards } from './project-info-cards'
 import { OverviewSkeleton } from './overview-skeleton'
+import { redirect } from 'next/navigation'
 
 export default function OverviewPage() {
   const selectedProject = useSelectedProjectStore(s => s.selectedProject);
@@ -16,6 +17,10 @@ export default function OverviewPage() {
   if (!selectedProject || isLoading) {
     return <OverviewSkeleton />;
   }
+
+  if(!project?.user.walletAddress){
+    redirect('/verify')
+}
 
   return (
     <div className="min-h-screen rounded-full bg-background p-8">

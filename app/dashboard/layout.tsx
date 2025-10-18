@@ -7,6 +7,7 @@ import { auth } from "@/lib/auth";
 import { SessionProvider } from "@/components/providers/session-provider";
 import type { User } from "better-auth";
 import { redirect } from "next/navigation";
+import { unstable_ViewTransition as ViewTransition } from "react";
 export default async function HomeLayout({
   children,
 }: Readonly<{
@@ -18,11 +19,14 @@ export default async function HomeLayout({
   })
 const user = session?.user
 
-if(!session?.user.walletAddress){
-  redirect('/verify')
+if(!session){
+  redirect('/signin')
 }
 
+
+
   return (
+    <ViewTransition>
     <SessionProvider session={session}>
           <SidebarProvider>
             <AppSidebar user={user as User} />
@@ -31,5 +35,6 @@ if(!session?.user.walletAddress){
             </SidebarInset>
           </SidebarProvider>
         </SessionProvider>
+    </ViewTransition>
   );
 }
