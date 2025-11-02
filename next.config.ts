@@ -27,10 +27,6 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   reactStrictMode: false,
-  experimental: {
-    viewTransition: true,
-    reactCompiler: true,
-  }
 };
 
 export default nextConfig;

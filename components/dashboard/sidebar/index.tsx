@@ -29,7 +29,7 @@ import ProjectSelector from './project-selector'
 import { User } from "better-auth";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { unstable_ViewTransition as ViewTransition } from 'react'
+import {  ViewTransition } from 'react'
 import { GradientBg } from '@/components/ui/gradient-bg'
 
 const menuItems = [
