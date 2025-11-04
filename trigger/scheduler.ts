@@ -3,8 +3,8 @@ import prisma from "@/db/index";
 
 export const timeoutEventsTask = schedules.task({
   id: "timeout-events-task",
-  // Every 5 minutes
-  cron: "*/5 * * * *",
+  // Once a day at midnight UTC
+  cron: "0 0 * * *",
   // Set an optional maxDuration to prevent tasks from running indefinitely
   maxDuration: 300, // Stop executing after 300 secs (5 mins) of compute
   run: async (payload, { ctx }) => {

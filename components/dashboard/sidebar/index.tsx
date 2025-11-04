@@ -142,7 +142,7 @@ export function AppSidebar({user}:{user:User}) {
                               viewTransitionName: 'sidebar-active',
                               padding: '0',
                               zIndex: 0,
-                              opacity: 0.6
+                              opacity: 0.6  
                             }}
                           />
                         )}
