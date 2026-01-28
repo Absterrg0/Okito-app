@@ -40,7 +40,7 @@ export function createRateLimitResponse(limit: number, remaining: number, reset:
         {
             status: 429,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json',         
                 'X-RateLimit-Limit': limit.toString(),
                 'X-RateLimit-Remaining': remaining.toString(),
                 'X-RateLimit-Reset': reset.toISOString(),
